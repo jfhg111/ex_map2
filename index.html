@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>화성오산 늘봄자원지도</title>
+  <!-- Leaflet 지도 스타일시트 로드 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <!-- Leaflet 기능 스크립트 로드 -->
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/map.css" />
+  <link rel="stylesheet" href="css/legend.css" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/pretendard.css" />
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <span class="header_text">화성오산 늘봄자원지도</span>
+    </header>
+    
+    <div class="legend-bar">
+        <div id="legend" class="legend"></div>
+    </div>
+
+    <div id="map"></div>
+    
+    <div class="bottom-filler"></div>
+
+  <script>
+    const map = L.map('map').setView([37.186025, 127.061549], 11);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const sheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
+    const gid = '1998815174';
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
+
+    fetch(url)
+    .then(res => res.text())
+    .then(text => {
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows;
+
+        const legendContainer = document.getElementById('legend');
+        rows.forEach(row => {
+        const type = row.c[1]?.v;
+        const shape = row.c[2]?.v;
+        const color = row.c[3]?.v;
+
+        const item = document.createElement('div');
+        item.style.display = 'flex';
+        item.style.alignItems = 'center';
+        item.style.marginBottom = '6px';
+
+        const icon = document.createElement('span');
+        icon.textContent = shape;
+        icon.style.color = color;
+        icon.style.marginRight = '8px';
+
+        const label = document.createElement('span');
+        label.textContent = type;
+
+        item.appendChild(icon);
+        item.appendChild(label);
+        legendContainer.appendChild(item);
+        });
+    })
+    .catch(err => console.error('Google Sheet fetch error:', err));
+
+    let hideTimer;
+
+    map.on('movestart zoomstart dragstart', () => {
+      document.querySelector('.legend-bar')?.classList.add('hidden');
+      clearTimeout(hideTimer);
+    });
+
+    map.on('moveend zoomend dragend', () => {
+      hideTimer = setTimeout(() => {
+        document.querySelector('.legend-bar')?.classList.remove('hidden');
+      }, 1500);
+    });
+
+  </script>
+
+  
+</body>
+
+<!-- © 지도 타일 데이터: OpenStreetMap, 지도 엔진: Leaflet -->
+
+</html>

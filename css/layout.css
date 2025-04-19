@@ -1,0 +1,34 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f3f3f3;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+  }
+
+* {
+    box-sizing: border-box;
+  }
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #fcfcfc;
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 1200;
+  }
+
+.bottom-filler {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background-color: #f3f3f3;
+    flex-shrink: 0;
+    z-index: 2000;
+}
