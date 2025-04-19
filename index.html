@@ -5,44 +5,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>화성오산 늘봄자원지도</title>
-  <!-- Leaflet 지도 스타일시트 로드 -->
+  <!-- Leaflet 로드 -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <!-- Leaflet 기능 스크립트 로드 -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-
+  <!-- css 로드 -->
   <link rel="stylesheet" href="css/header.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/map.css" />
   <link rel="stylesheet" href="css/legend.css" />
-
+  <!-- 서체 로드 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/pretendard.css" />
 </head>
 
 <body>
-  <div class="container">
-    <header>
-      <span class="header_text">화성오산 늘봄자원지도</span>
-    </header>
-    
-    <div class="legend-bar">
-        <div id="legend" class="legend"></div>
-    </div>
-
-    <!-- legend 설명 모달 -->
-    <div id="legend-info" class="legend-info hidden">
-        <div class="legend-info-content">
-        <span class="legend-info-close">×</span>
-        <div class="legend-info-text">
-            <!-- 여기에 JS로 내용 삽입 -->
+    <!--세로형 컨테이너-->
+    <div class="container"> 
+        <header>
+        <span class="header_text">화성오산 늘봄자원지도</span>
+        </header>
+        
+        <button class="help-button">?</button>
+        
+        <!-- 도움말 모달 메시지 창 -->
+        <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close" id="help-modal-close">×</span>
+            <h2>🗺️ 사용 방법 안내</h2>
+            <p>
+                <strong>화성・오산 지역의 늘봄 및 돌봄 시설</strong> 정보를 제공하는 지도입니다.
+            </p>
+            <ul>
+            <li><strong>지도를 확대하거나 이동</strong>하여 관심 지역을 살펴보세요.</li>
+            <li><strong>아이콘을 클릭하면</strong> 기관의 정보가 표시됩니다.</li>
+            <li>하단 <strong>범례</strong> 항목 이름을 누르면 관련 설명을 볼 수 있습니다.</li>
+            </ul>
+            <p style="color: grey; font-size: 9px;">
+            마지막 업데이트: 2025. 4. 19.(토)
+            </p>
+            <div class="modal-download-button">
+                <!--여기에 다운로드 링크 입력(청 홈페이지에 올리고 링크 걸기)-->
+                <a href="~~~~~~~~~~~" style="color: black; text-decoration: none;">기관 목록 다운로드</a>
+            </div>
         </div>
         </div>
+
+        <!-- 슬라이드될 범례 요소 -->
+        <div class="legend-bar">
+            <div id="legend" class="legend"></div>
+        </div>
+
+        <!-- legend 설명 모달 -->
+        <div id="legend-info" class="legend-info hidden">
+            <div class="legend-info-content">
+            <span class="legend-info-close">×</span>
+            <div class="legend-info-text">
+            </div>
+            </div>
+        </div>
+
+        <!-- 지도 및 포인트 등 -->
+        <div id="map">
+        </div>
+
     </div>
-
-    <div id="map"></div>
-
-  </div>
-  <div class="bottom-filler"></div>
-
+  
+  <!-- 자바스크립트 연결 -->
   <script src="script.js">
   </script>
 

@@ -1,4 +1,4 @@
-const map = L.map('map').setView([37.186025, 127.061549], 11);
+const map = L.map('map', { zoomControl: false }).setView([37.196554, 126.911871], 10);
 const bounds = L.latLngBounds( //지도 보이는 범위 설정
   [36.886521, 126.557641], // 남서쪽 한계
   [37.403725, 127.272064]  // 북동쪽 한계
@@ -9,7 +9,6 @@ map.setMaxZoom(17);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors',
-  maxZoom: 19
 }).addTo(map);
 
 // 화면 높이 설정
@@ -26,7 +25,7 @@ setContainerHeight();
 // 범례 맵 객체 선언
 const legendMap = {};
 
-// 범례 시트 fetch
+// 범례 시트 불러오기
 const legendSheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
 const legendGid = '1998815174';
 const legendUrl = `https://docs.google.com/spreadsheets/d/${legendSheetId}/gviz/tq?tqx=out:json&gid=${legendGid}`;
@@ -70,16 +69,7 @@ fetch(legendUrl)
 
       label.style.cursor = 'pointer';
       label.addEventListener('click', () => {
-        const infoBox = document.getElementById('legend-info');
-        const content = infoBox.querySelector('.legend-info-text');
-        content.innerHTML = `
-          <h3>${type}</h3>
-          <p><strong>이용 대상:</strong> ${trgt}</p>
-          <p><strong>장소 설명:</strong> ${desc}</p>
-          <p><strong>지원 내용:</strong> ${serv}</p>
-          <p><strong>이용료:</strong> ${fee}</p>
-        `;
-        infoBox.classList.remove('hidden');
+        showLegendInfo(type, trgt, desc, serv, fee);
       });
 
       item.appendChild(icon);
@@ -105,17 +95,17 @@ fetch(legendUrl)
 function showLegendInfo(type, trgt, desc, serv, fee) {
   const infoBox = document.getElementById('legend-info');
   const content = infoBox.querySelector('.legend-info-text');
-  content.innerHTML = `
-    <h3>${type}</h3>
-    <p><strong>이용 대상:</strong> ${trgt}</p>
-    <p><strong>장소 설명:</strong> ${desc}</p>
-    <p><strong>지원 내용:</strong> ${serv}</p>
-    <p><strong>이용료:</strong> ${fee}</p>
-  `;
+  let html = '';
+  if (type) html += `<h1>${type}</h1>`;
+  if (trgt) html += `<p><strong>이용 대상:</strong> ${trgt}</p>`;
+  if (desc) html += `<p><strong>장소 설명:</strong> ${desc}</p>`;
+  if (serv) html += `<p><strong>지원 내용:</strong> ${serv}</p>`;
+  if (fee) html += `<p><strong>이용료:</strong> ${fee}</p>`;
+  content.innerHTML = html;
   infoBox.classList.remove('hidden');
 }
 
-// 포인트 시트 fetch 및 마커 표시
+// 포인트 시트 불러오기 및 마커 표시
 const pointsSheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
 const pointsGid = '0';
 const pointsUrl = `https://docs.google.com/spreadsheets/d/${pointsSheetId}/gviz/tq?tqx=out:json&gid=${pointsGid}`;
@@ -146,9 +136,10 @@ fetch(pointsUrl)
             capa: c[6]?.v,
             sem_t: c[7]?.v,
             vac_t: c[8]?.v,
-            phone: c[9]?.v,
-            shape: c[10]?.v,
-            color: c[11]?.v
+            time: c[9]?.v,
+            phone: c[10]?.v,
+            shape: c[11]?.v,
+            color: c[12]?.v
           }
         };
       })
@@ -175,6 +166,7 @@ fetch(pointsUrl)
         if (p.phone) popup += `<span class="popup-phone">📞 ${p.phone}</span>`;
         if (p.sem_t) popup += `<span class="popup-time">학기중 ${p.sem_t}</span>`;
         if (p.vac_t) popup += `<span class="popup-time">방학중 ${p.vac_t}</span>`;
+        if (p.time) popup += `<span class="popup-time">운영 시간 ${p.time}</span>`;
         popup += `<button class="popup-more" data-type="${p.type}">더보기</button><br>`;
         popup += `</div>`;
         layer.bindPopup(popup);
@@ -205,3 +197,25 @@ map.on('moveend zoomend dragend', () => {
     document.querySelector('.legend-bar')?.classList.remove('hidden');
   }, 1500);
 });
+
+// 도움말 모달 열고 닫기
+const helpBtn = document.querySelector('.help-button');
+const modal = document.getElementById('help-modal');
+const closeBtn = document.getElementById('help-modal-close');
+
+if (helpBtn && modal && closeBtn) {
+  helpBtn.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+
+  modal.addEventListener('click', (e) => {
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent && !modalContent.contains(e.target)) {
+      modal.classList.add('hidden');
+    }
+  });
+}
