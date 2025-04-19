@@ -2,8 +2,89 @@
     flex: 1;
     height: 100%;
     min-height: 300px; 
-  }
+}
 
 .leaflet-tile {
-    filter: saturate(50%) brightness(110%); /* 지도 채도 낮춤 */
+    filter: saturate(40%) brightness(105%); /* 지도 채도 낮춤 */
     }
+
+/* 커스텀 마커 스타일 */
+.custom-marker {
+  background: transparent;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-shape {
+  background: transparent;
+  font-size: 25px;
+  text-align: center;
+  line-height: 18px;
+  text-shadow: 0px 0px 2px black;
+}
+
+/* 팝업 스타일 */
+.leaflet-popup-content {
+    line-height: 1.4;
+    margin: 15px;
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: #fff;
+  border-radius: 3px;
+  padding: 5px 0px 3px 0px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.leaflet-popup-tip {
+  background: #fff;
+}
+
+/* 팝업 안 세부 텍스트 스타일 */
+.custom-popup {
+  font-weight: 400;  
+  font-size: 12px;
+  color: black;
+  position: relative;
+}
+
+.custom-popup .popup-type {
+  display: block;
+  font-size: 11px;
+}
+
+.custom-popup .popup-name {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.custom-popup .popup-adrs {
+    font-size: 9px;
+    font-weight: 400;
+    color: grey;
+}
+
+.custom-popup .popup-phone,
+.custom-popup .popup-time {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #555;
+}
+
+.custom-popup .popup-more {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: gray;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: right;
+  position: absolute;
+  right: -10px;
+}

@@ -38,3 +38,32 @@
 .legend-bar.hidden {
     transform: translateY(100%); /* 아래로 밀어 숨김 */
   }
+
+  /* 여기부터 범례 설명 창 */
+  .legend-info {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2200;
+  }
+  
+  .legend-info.hidden {
+    display: none;
+  }
+  
+  .legend-info-content {
+    background: white;
+    padding: 15px;
+    max-width: 350px;
+    border-radius: 5px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .legend-info-close {
+    float: right;
+    cursor: pointer;
+    font-weight: bold;
+  }

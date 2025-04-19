@@ -28,66 +28,22 @@
         <div id="legend" class="legend"></div>
     </div>
 
+    <!-- legend 설명 모달 -->
+    <div id="legend-info" class="legend-info hidden">
+        <div class="legend-info-content">
+        <span class="legend-info-close">×</span>
+        <div class="legend-info-text">
+            <!-- 여기에 JS로 내용 삽입 -->
+        </div>
+        </div>
+    </div>
+
     <div id="map"></div>
-    
-    <div class="bottom-filler"></div>
 
-  <script>
-    const map = L.map('map').setView([37.186025, 127.061549], 11);
+  </div>
+  <div class="bottom-filler"></div>
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    const sheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
-    const gid = '1998815174';
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
-
-    fetch(url)
-    .then(res => res.text())
-    .then(text => {
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-
-        const legendContainer = document.getElementById('legend');
-        rows.forEach(row => {
-        const type = row.c[1]?.v;
-        const shape = row.c[2]?.v;
-        const color = row.c[3]?.v;
-
-        const item = document.createElement('div');
-        item.style.display = 'flex';
-        item.style.alignItems = 'center';
-        item.style.marginBottom = '6px';
-
-        const icon = document.createElement('span');
-        icon.textContent = shape;
-        icon.style.color = color;
-        icon.style.marginRight = '8px';
-
-        const label = document.createElement('span');
-        label.textContent = type;
-
-        item.appendChild(icon);
-        item.appendChild(label);
-        legendContainer.appendChild(item);
-        });
-    })
-    .catch(err => console.error('Google Sheet fetch error:', err));
-
-    let hideTimer;
-
-    map.on('movestart zoomstart dragstart', () => {
-      document.querySelector('.legend-bar')?.classList.add('hidden');
-      clearTimeout(hideTimer);
-    });
-
-    map.on('moveend zoomend dragend', () => {
-      hideTimer = setTimeout(() => {
-        document.querySelector('.legend-bar')?.classList.remove('hidden');
-      }, 1500);
-    });
-
+  <script src="script.js">
   </script>
 
   
