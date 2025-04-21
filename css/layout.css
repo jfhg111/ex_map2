@@ -3,7 +3,7 @@ html, body {
     padding: 0;
     height: 100%;
     background-color: #f3f3f3;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
   }
 
 * {

@@ -13,15 +13,18 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/map.css" />
   <link rel="stylesheet" href="css/legend.css" />
-  <!-- 서체 로드 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/pretendard.css" />
+  <!-- 노토산스 로드 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet" />
 </head>
 
 <body>
     <!--세로형 컨테이너-->
     <div class="container"> 
         <header>
-        <span class="header_text">화성오산 늘봄자원지도</span>
+          <a href="https://www.goehs.kr" class="logo-link" target="_blank" rel="noopener noreferrer">
+            <img src="hwaologo.svg" alt="화성오산교육지원청 로고" class="logo" />
+          </a>
+          <span class="header_text">화성오산 늘봄자원지도</span>
         </header>
         
         <button class="help-button">?</button>
@@ -44,7 +47,7 @@
             </p>
             <div class="modal-download-button">
                 <!--여기에 다운로드 링크 입력(청 홈페이지에 올리고 링크 걸기)-->
-                <a href="~~~~~~~~~~~" style="color: black; text-decoration: none;">기관 목록 다운로드</a>
+                <a href="~~~~~~~~~~~" target="_blank" style="color: black; text-decoration: none;">전체 늘봄/돌봄시설 목록 다운로드(엑셀)</a>
             </div>
         </div>
         </div>
@@ -73,7 +76,6 @@
   <script src="script.js">
   </script>
 
-  
 </body>
 
 <!-- © 지도 타일 데이터: OpenStreetMap, 지도 엔진: Leaflet -->
