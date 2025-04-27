@@ -96,7 +96,7 @@ fetch(legendUrl)
     allIcon.style.marginRight = '8px';
 
     const allLabel = document.createElement('span');
-    allLabel.textContent = '전체보기';
+    allLabel.textContent = '전체 표시';
 
     allItem.classList.add('legend-item'); // 전체보기 버튼도 동일 적용
 
@@ -223,10 +223,10 @@ fetch(pointsUrl)
         if (p.name) popup += `<span class="popup-name">${p.name}</span><br>`;
         if (p.adrs) popup += `<span class="popup-adrs">${p.adrs}</span>`;
         popup += `<hr style="border: solid 0.5px #dedede; "></hr>`;
-        if (p.phone) popup += `<span class="popup-phone"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 연락처</b> ${p.phone}</span>`;
-        if (p.sem_t) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 학기중</b> ${p.sem_t}</span>`;
-        if (p.vac_t) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 방학중</b> ${p.vac_t}</span>`;
-        if (p.time) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 운영 시간</b> ${p.time}</span>`;
+        if (p.phone) popup += `<span class="popup-phone"><b style="font-weight: 700; font-size: 90%; position: relative; top: -1px">• 연락처</b> ${p.phone}</span>`;
+        if (p.sem_t) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 90%; position: relative; top: -1px">• 학기중</b> ${p.sem_t}</span>`;
+        if (p.vac_t) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 90%; position: relative; top: -1px">• 방학중</b> ${p.vac_t}</span>`;
+        if (p.time) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 90%; position: relative; top: -1px">• 운영 시간</b> ${p.time}</span>`;
         popup += `<button class="popup-more" data-type="${p.type}">더보기</button><br>`;
         popup += `</div>`;
         layer.bindPopup(popup);
@@ -329,15 +329,35 @@ fetch(helpUrl)
 
 //인트로 툴팁
 window.addEventListener('DOMContentLoaded', () => {
-  // 툴팁 항상 보여주기
-  document.getElementById('legend-tooltip').classList.remove('hidden');
-  document.getElementById('map-tooltip').classList.remove('hidden');
-
+  // 0.5초 지연 후 툴팁 표시
+  setTimeout(() => {
+    const legendTooltip = document.getElementById('legend-tooltip');
+    const mapTooltip = document.getElementById('map-tooltip');
+  
+    legendTooltip?.classList.remove('hidden');
+    mapTooltip?.classList.remove('hidden');
+  
+    // 다음 프레임에 .show 추가 (transition이 먹으려면 렌더링 이후 추가해야 함)
+    requestAnimationFrame(() => {
+      legendTooltip?.classList.add('show');
+      mapTooltip?.classList.add('show');
+    });
+  }, 500);
+  
   // 닫기 버튼 연결
   document.querySelectorAll('.tooltip-close').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const targetId = e.target.getAttribute('data-target');
-      document.getElementById(targetId).classList.add('hidden');
+      const el = document.getElementById(targetId);
+      if (!el) return;
+
+      el.classList.remove('show'); // fade-out 시작
+
+      const handleTransitionEnd = () => {
+        el.classList.add('hidden'); // fade-out 후 완전히 숨김
+        el.removeEventListener('transitionend', handleTransitionEnd);
+      };
+      el.addEventListener('transitionend', handleTransitionEnd);
     });
   });
 });
