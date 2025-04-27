@@ -12,6 +12,8 @@
 .legend-item {
     display: flex;
     align-items: center;
+    margin-bottom: 6px;
+    cursor: pointer;
 } 
 
 .legend-icon {
@@ -39,8 +41,8 @@
     transform: translateY(100%); /* 아래로 밀어 숨김 */
   }
 
-  /* 여기부터 범례 설명 창 */
-  .legend-info {
+  /* 여기부터 시설 타입별 더보기 설명 창 */
+  .type-info {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.5);
@@ -50,11 +52,11 @@
     z-index: 2200;
   }
   
-  .legend-info.hidden {
+  .type-info.hidden {
     display: none;
   }
   
-  .legend-info-content {
+  .type-info-content {
     background: white;
     padding: 15px;
     max-width: Min(90vw, 400px);
@@ -62,7 +64,7 @@
     font-size: 14px;
     line-height: 1.6;
   }
-  .legend-info-close {
+  .type-info-close {
     float: right;
     cursor: pointer;
     font-weight: bold;

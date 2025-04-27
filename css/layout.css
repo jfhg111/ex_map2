@@ -36,6 +36,7 @@ html, body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   background: white;
   padding: 0px;
+  cursor: pointer;
 }
 
 /* 도움말 모달 스타일 */

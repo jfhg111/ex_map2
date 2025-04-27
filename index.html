@@ -31,25 +31,12 @@
         
         <!-- 도움말 모달 메시지 창 -->
         <div id="help-modal" class="modal hidden">
-        <div class="modal-content">
+          <div class="modal-content">
             <span class="modal-close" id="help-modal-close">×</span>
-            <h2>🗺️ 사용 방법 안내</h2>
-            <p>
-                <strong>화성・오산 지역의 늘봄 및 돌봄 시설</strong> 정보를 제공하는 지도입니다.
-            </p>
-            <ul>
-            <li><strong>지도를 확대하거나 이동</strong>하여 관심 지역을 살펴보세요.</li>
-            <li><strong>아이콘을 클릭하면</strong> 기관의 정보가 표시됩니다.</li>
-            <li>하단 <strong>범례</strong> 항목 이름을 누르면 관련 설명을 볼 수 있습니다.</li>
-            </ul>
-            <p style="color: grey; font-size: 9px;">
-            마지막 업데이트: 2025. 4. 19.(토)
-            </p>
-            <div class="modal-download-button">
-                <!--여기에 다운로드 링크 입력(청 홈페이지에 올리고 링크 걸기)-->
-                <a href="~~~~~~~~~~~" target="_blank" style="color: black; text-decoration: none;">전체 늘봄/돌봄시설 목록 다운로드(엑셀)</a>
+            <div id="help-modal-body">
+              <!-- 여기에 JS로 구글 시트에서 불러온 내용이 삽입될 예정 -->
             </div>
-        </div>
+          </div>
         </div>
 
         <!-- 슬라이드될 범례 요소 -->
@@ -57,12 +44,12 @@
             <div id="legend" class="legend"></div>
         </div>
 
-        <!-- legend 설명 모달 -->
-        <div id="legend-info" class="legend-info hidden">
-            <div class="legend-info-content">
-            <span class="legend-info-close">×</span>
-            <div class="legend-info-text">
-            </div>
+        <!-- type-info 모달 창 -->
+        <div id="type-info" class="type-info hidden">
+            <div class="type-info-content">
+              <span class="type-info-close">X</span>
+              <div class="type-info-text">
+              </div>
             </div>
         </div>
 

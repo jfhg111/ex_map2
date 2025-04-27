@@ -1,18 +1,20 @@
-const map = L.map('map', { zoomControl: false }).setView([37.196554, 126.911871], 10);
-const bounds = L.latLngBounds( //지도 보이는 범위 설정
-  [36.886521, 126.557641], // 남서쪽 한계
-  [37.403725, 127.272064]  // 북동쪽 한계
-);
-map.setMaxBounds(bounds);
-map.setMinZoom(10); //최소최대 줌 설정
-map.setMaxZoom(17);
+let currentFilterType = null; // 현재 선택된 필터의 상태를 저장하는 변수
+const markers = []; // 지도에 표시된 마커를 저장할 배열
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+const map = L.map('map', { zoomControl: false }).setView([37.196554, 126.911871], 10);
+const bounds = L.latLngBounds( //지도 가시범위 설정
+  [36.886521, 126.557641], // 남서 한계
+  [37.403725, 127.272064]  // 북동 한계
+);
+map.setMaxBounds(bounds);  //최소최대 줌 설정
+  map.setMinZoom(10);
+  map.setMaxZoom(17);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { //오픈스트리트맵 불러오기
   attribution: '&copy; OpenStreetMap contributors',
 }).addTo(map);
 
-// 화면 높이 설정
-function setContainerHeight() {
+function setContainerHeight() { // 화면높이 컨테이너에 맞춰 설정
   const container = document.querySelector('.container');
   if (container) {
     container.style.height = `${window.innerHeight}px`;
@@ -37,15 +39,13 @@ fetch(legendUrl)
     const rows = json.table.rows;
 
     const legendContainer = document.getElementById('legend');
-    rows.forEach(row => {
+    rows.forEach(row => { //각 범례항목 줄 추가
       const type = row.c[1]?.v;
       const shape = row.c[2]?.v;
       const color = row.c[3]?.v;
 
       const item = document.createElement('div');
-      item.style.display = 'flex';
-      item.style.alignItems = 'center';
-      item.style.marginBottom = '6px';
+      item.classList.add('legend-item');
 
       const icon = document.createElement('span');
       icon.textContent = shape;
@@ -68,47 +68,80 @@ fetch(legendUrl)
       legendMap[type] = { trgt, desc, serv, fee };
 
       label.style.cursor = 'pointer';
-      label.addEventListener('click', () => {
-        showLegendInfo(type, trgt, desc, serv, fee);
-      });
+      label.addEventListener('click', () => { // 범례 이름 클릭 시 필터 적용
+        if (currentFilterType === type) { // 이미 클릭된 항목이면 필터 해제 (전체 보기)
+
+          currentFilterType = null;
+          filterMarkersByType(null); // 전체 보이기
+        } else {
+          currentFilterType = type;
+          filterMarkersByType(type); // 해당 type만 보이기
+        }
+      });      
+
+      item.classList.add('legend-item');    // 범례 항목에 공통 클래스
 
       item.appendChild(icon);
       item.appendChild(label);
       legendContainer.appendChild(item);
+
     });
 
-    document.querySelector('.legend-info-close').addEventListener('click', () => {
-      document.getElementById('legend-info').classList.add('hidden');
+    // 마지막에 "전체보기" 버튼 추가
+    const allItem = document.createElement('div');
+    allItem.classList.add('legend-item');
+
+    const allIcon = document.createElement('span');
+    allIcon.textContent = '🔄';
+    allIcon.style.marginRight = '8px';
+
+    const allLabel = document.createElement('span');
+    allLabel.textContent = '전체보기';
+
+    allItem.classList.add('legend-item'); // 전체보기 버튼도 동일 적용
+
+    allItem.appendChild(allIcon);
+    allItem.appendChild(allLabel);
+    legendContainer.appendChild(allItem);
+
+    allLabel.addEventListener('click', () => {
+      currentFilterType = null;
+      filterMarkersByType(null);  // 전체 마커 보이기
+    });
+
+    // 팝업 닫기 버튼
+    document.querySelector('.type-info-close').addEventListener('click', () => {
+      document.getElementById('type-info').classList.add('hidden');
     });
 
     // 팝업 외부 클릭 시 창 닫기
-    document.getElementById('legend-info').addEventListener('click', (e) => {
-      const content = document.querySelector('.legend-info-content');
+    document.getElementById('type-info').addEventListener('click', (e) => {
+      const content = document.querySelector('.type-info-content');
       if (!content.contains(e.target)) {
-        document.getElementById('legend-info').classList.add('hidden');
+        document.getElementById('type-info').classList.add('hidden');
       }
     });
   })
   .catch(err => console.error('Google Sheet fetch error:', err));
 
-// showLegendInfo 함수 추가
-function showLegendInfo(type, trgt, desc, serv, fee) {
-  const infoBox = document.getElementById('legend-info');
-  const content = infoBox.querySelector('.legend-info-text');
+  // showTypeInfo 함수 추가
+  function showTypeInfo(type, trgt, desc, serv, fee) {
+  const infoBox = document.getElementById('type-info');
+  const content = infoBox.querySelector('.type-info-text');
   let html = '';
-  if (type) html += `<h1>${type}</h1>`;
+  if (type) html += `<p>${type}<p>`;
   if (trgt) html += `<p><strong>이용 대상:</strong> ${trgt}</p>`;
   if (desc) html += `<p><strong>장소 설명:</strong> ${desc}</p>`;
   if (serv) html += `<p><strong>지원 내용:</strong> ${serv}</p>`;
   if (fee) html += `<p><strong>이용료:</strong> ${fee}</p>`;
   content.innerHTML = html;
   infoBox.classList.remove('hidden');
-}
+  }
 
-// 포인트 시트 불러오기 및 마커 표시
-const pointsSheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
-const pointsGid = '0';
-const pointsUrl = `https://docs.google.com/spreadsheets/d/${pointsSheetId}/gviz/tq?tqx=out:json&gid=${pointsGid}`;
+  // 포인트 시트 불러오기 및 마커 표시
+  const pointsSheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
+  const pointsGid = '0';
+  const pointsUrl = `https://docs.google.com/spreadsheets/d/${pointsSheetId}/gviz/tq?tqx=out:json&gid=${pointsGid}`;
 
 fetch(pointsUrl)
   .then(res => res.text())
@@ -155,7 +188,10 @@ fetch(pointsUrl)
           iconSize: [24, 24],
           iconAnchor: [12, 12]
         });
-        return L.marker(latlng, { icon: icon });
+        const marker = L.marker(latlng, { icon: icon });
+        marker.feature = feature;  // 마커에 type 정보를 저장 (필터용)
+        markers.push(marker);      // 배열에 마커 저장
+        return marker;
       },
       onEachFeature: function (feature, layer) {
         const p = feature.properties;
@@ -177,7 +213,7 @@ fetch(pointsUrl)
             btn.addEventListener('click', () => {
               const type = btn.dataset.type;
               const { trgt, desc, serv, fee } = legendMap[type] || {};
-              showLegendInfo(type, trgt, desc, serv, fee);
+              showTypeInfo(type, trgt, desc, serv, fee);
             });
           }
         });
@@ -219,3 +255,50 @@ if (helpBtn && modal && closeBtn) {
     }
   });
 }
+
+function filterMarkersByType(type) { // 마커 필터링 함수
+  markers.forEach(marker => {
+    const markerType = marker.feature.properties.type;
+    if (type === null || markerType === type) {
+      map.addLayer(marker);
+    } else {
+      map.removeLayer(marker);
+    }
+  });
+}
+
+// 도움말 팝업창 내용 불러오기
+const helpSheetId = '1ZTUWQ7A1WOKYwz4jz5Q09JaxKwdP-cZ_tK8EnupkMMI';
+const helpGid = '1804558100';
+const helpUrl = `https://docs.google.com/spreadsheets/d/${helpSheetId}/gviz/tq?tqx=out:json&gid=${helpGid}`;
+
+fetch(helpUrl)
+  .then(res => res.text())
+  .then(text => {
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    const rows = json.table.rows;
+
+    if (rows.length > 0) {
+      const c = rows[1].c; // 첫 번째 줄
+      const title = c[0]?.v || '';
+      const updateDate = c[1]?.v || '';
+      const helpTitle = c[2]?.v || '';
+      const helpSubtitle = c[3]?.v || '';
+      const helpContent = c[4]?.v || '';
+      const contact = c[5]?.v || '';
+      const download = c[6]?.v || '';
+      const downloadlink = c[7]?.v || '';
+
+      const modalBody = document.getElementById('help-modal-body');
+
+      let html = '';
+      if (helpTitle) html += `<h2>${helpTitle}</h2>`;
+      if (helpSubtitle) html += `<p>${helpSubtitle}</p>`;
+      if (helpContent) html += `<p>${helpContent}</p>`;
+      if (contact) html += `<p>문의 및 오류신고: ${contact}</p>`;
+      if (updateDate) html += `<p style="font-size: 12px; color: gray;">업데이트: ${updateDate}</p>`;
+      if (download) html += `<div class="modal-download-button"><a href=${downloadlink} target="_blank" style="color: black; text-decoration: none;">${download}</a></div>`;
+      modalBody.innerHTML = html;
+    }
+  })
+  .catch(err => console.error('Help Sheet fetch error:', err));
