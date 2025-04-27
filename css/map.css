@@ -57,21 +57,28 @@
 
 .custom-popup .popup-type {
   display: block;
-  font-size: 11px;
+  font-size: 11x;
 }
 
 .custom-popup .popup-name {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .custom-popup .popup-adrs {
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 400;
     color: grey;
 }
 
-.custom-popup .popup-phone,
+.custom-popup .popup-phone{
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #555;
+}
+
 .custom-popup .popup-time {
   display: block;
   margin-top: 4px;

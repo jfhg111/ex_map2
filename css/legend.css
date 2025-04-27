@@ -37,35 +37,6 @@
     z-index: 1200;
   }
 
-.legend-bar.hidden {
+.legend-bar.slide-out {
     transform: translateY(100%); /* 아래로 밀어 숨김 */
-  }
-
-  /* 여기부터 시설 타입별 더보기 설명 창 */
-  .type-info {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2200;
-  }
-  
-  .type-info.hidden {
-    display: none;
-  }
-  
-  .type-info-content {
-    background: white;
-    padding: 15px;
-    max-width: Min(90vw, 400px);
-    border-radius: 5px;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .type-info-close {
-    float: right;
-    cursor: pointer;
-    font-weight: bold;
   }

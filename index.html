@@ -13,13 +13,35 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/map.css" />
   <link rel="stylesheet" href="css/legend.css" />
+  <link rel="stylesheet" href="css/type.css" />
   <!-- 노토산스 로드 -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <!--세로형 컨테이너-->
     <div class="container"> 
+
+      <!-- 범례 툴팁 -->
+      <div id="legend-tooltip" class="balloon-tooltip hidden">
+        <div class="tooltip-inner">
+          <span class="tooltip-close" data-target="legend-tooltip">×</span>
+          하단 시설명을 누르면<br>필터할 수 있습니다.
+        </div>
+        <div class="legend-tooltip-arrow"></div>
+      </div>
+
+      <!-- 지도 툴팁 -->
+      <div id="map-tooltip" class="balloon-tooltip hidden">
+        <div class="tooltip-inner">
+          <span class="tooltip-close" data-target="map-tooltip">×</span>
+          지도 포인트를 누르면<br>시설 설명을 볼 수 있습니다.
+        </div>
+        <div class="map-tooltip-arrow"></div>
+      </div>
+
         <header>
           <a href="https://www.goehs.kr" class="logo-link" target="_blank" rel="noopener noreferrer">
             <img src="hwaologo.svg" alt="화성오산교육지원청 로고" class="logo" />

@@ -126,16 +126,39 @@ fetch(legendUrl)
 
   // showTypeInfo 함수 추가
   function showTypeInfo(type, trgt, desc, serv, fee) {
-  const infoBox = document.getElementById('type-info');
-  const content = infoBox.querySelector('.type-info-text');
-  let html = '';
-  if (type) html += `<p>${type}<p>`;
-  if (trgt) html += `<p><strong>이용 대상:</strong> ${trgt}</p>`;
-  if (desc) html += `<p><strong>장소 설명:</strong> ${desc}</p>`;
-  if (serv) html += `<p><strong>지원 내용:</strong> ${serv}</p>`;
-  if (fee) html += `<p><strong>이용료:</strong> ${fee}</p>`;
-  content.innerHTML = html;
-  infoBox.classList.remove('hidden');
+    const infoBox = document.getElementById('type-info');
+    const content = infoBox.querySelector('.type-info-text');
+    
+    // type-title을 테이블 밖으로 이동
+    let html = '';
+    if (type) html += `<div class="type-title">${type}</div>`;
+  
+    // 테이블 생성
+    html += `<table class="type-info-table">`;
+      if (trgt) html += `
+        <tr>
+          <td class="first-col">이용 대상</td>
+          <td>${trgt}</td>
+        </tr>`;
+      if (desc) html += `
+        <tr>
+          <td class="first-col">장소 설명</td>
+          <td>${desc}</td>
+        </tr>`;
+      if (serv) html += `
+        <tr>
+          <td class="first-col">지원 내용</td>
+          <td>${serv}</td>
+        </tr>`;
+      if (fee) html += `
+        <tr>
+          <td class="first-col">이용료</td>
+          <td>${fee}</td>
+        </tr>`;
+    html += '</table>';
+  
+    content.innerHTML = html;
+    infoBox.classList.remove('hidden');
   }
 
   // 포인트 시트 불러오기 및 마커 표시
@@ -199,10 +222,11 @@ fetch(pointsUrl)
         if (p.type) popup += `<span class="popup-type"style="color:${p.color}">${p.type}</span>`;
         if (p.name) popup += `<span class="popup-name">${p.name}</span><br>`;
         if (p.adrs) popup += `<span class="popup-adrs">${p.adrs}</span>`;
-        if (p.phone) popup += `<span class="popup-phone">📞 ${p.phone}</span>`;
-        if (p.sem_t) popup += `<span class="popup-time">학기중 ${p.sem_t}</span>`;
-        if (p.vac_t) popup += `<span class="popup-time">방학중 ${p.vac_t}</span>`;
-        if (p.time) popup += `<span class="popup-time">운영 시간 ${p.time}</span>`;
+        popup += `<hr style="border: solid 0.5px #dedede; "></hr>`;
+        if (p.phone) popup += `<span class="popup-phone"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 연락처</b> ${p.phone}</span>`;
+        if (p.sem_t) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 학기중</b> ${p.sem_t}</span>`;
+        if (p.vac_t) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 방학중</b> ${p.vac_t}</span>`;
+        if (p.time) popup += `<span class="popup-time"><b style="font-weight: 700; font-size: 80%; position: relative; top: -1px">• 운영 시간</b> ${p.time}</span>`;
         popup += `<button class="popup-more" data-type="${p.type}">더보기</button><br>`;
         popup += `</div>`;
         layer.bindPopup(popup);
@@ -225,12 +249,12 @@ fetch(pointsUrl)
 // 지도 상에서 이동/줌 시 범례 숨김 처리
 let hideTimer;
 map.on('movestart zoomstart dragstart', () => {
-  document.querySelector('.legend-bar')?.classList.add('hidden');
+  document.querySelector('.legend-bar')?.classList.add('slide-out');
   clearTimeout(hideTimer);
 });
 map.on('moveend zoomend dragend', () => {
   hideTimer = setTimeout(() => {
-    document.querySelector('.legend-bar')?.classList.remove('hidden');
+    document.querySelector('.legend-bar')?.classList.remove('slide-out');
   }, 1500);
 });
 
@@ -294,11 +318,26 @@ fetch(helpUrl)
       let html = '';
       if (helpTitle) html += `<h2>${helpTitle}</h2>`;
       if (helpSubtitle) html += `<p>${helpSubtitle}</p>`;
-      if (helpContent) html += `<p>${helpContent}</p>`;
-      if (contact) html += `<p>문의 및 오류신고: ${contact}</p>`;
-      if (updateDate) html += `<p style="font-size: 12px; color: gray;">업데이트: ${updateDate}</p>`;
+      if (helpContent) html += `<p style="font-size: 12px">${helpContent}</p>`;
+      if (contact) html += `<p style="font-size: 11px; color: gray;">※ 문의 및 오류신고: ${contact}</p>`;
+      if (updateDate) html += `<p style="font-size: 11px; color: gray;">※ 최근 업데이트: ${updateDate}</p>`;
       if (download) html += `<div class="modal-download-button"><a href=${downloadlink} target="_blank" style="color: black; text-decoration: none;">${download}</a></div>`;
       modalBody.innerHTML = html;
     }
   })
   .catch(err => console.error('Help Sheet fetch error:', err));
+
+//인트로 툴팁
+window.addEventListener('DOMContentLoaded', () => {
+  // 툴팁 항상 보여주기
+  document.getElementById('legend-tooltip').classList.remove('hidden');
+  document.getElementById('map-tooltip').classList.remove('hidden');
+
+  // 닫기 버튼 연결
+  document.querySelectorAll('.tooltip-close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetId = e.target.getAttribute('data-target');
+      document.getElementById(targetId).classList.add('hidden');
+    });
+  });
+});
